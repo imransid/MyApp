@@ -1,97 +1,154 @@
-This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
+# MyApp
 
-# Getting Started
+MyApp is a modern **React Native boilerplate** designed to help developers quickly bootstrap mobile applications with a **scalable architecture** and **production-ready integrations**.
 
-> **Note**: Make sure you have completed the [Set Up Your Environment](https://reactnative.dev/docs/set-up-your-environment) guide before proceeding.
+---
 
-## Step 1: Start Metro
+## 🚀 Features
 
-First, you will need to run **Metro**, the JavaScript build tool for React Native.
+- **React Native Navigation** – Robust navigation with stack, tab, and drawer flows.
+- **Detox (E2E Testing)** – Fully integrated end-to-end testing setup.
+- **Redux Toolkit** – Simplified state management with best practices.
+- **Redux Saga** – Side effects handling (API calls, async flows) with a scalable middleware.
+- **Redux Logger** – Debug-friendly state logging.
+- **Redux Persist** – Offline-first experience with persistent storage.
+- **React Native Reanimated** – Smooth animations with high performance.
+- **Tailwind (NativeWind)** – Utility-first styling for rapid UI development.
+- **React Native Size Matters** – Responsive UI scaling across devices.
+- **Formik** – Easy and scalable form handling.
 
-To start the Metro dev server, run the following command from the root of your React Native project:
+---
 
-```sh
-# Using npm
-npm start
+## 📂 Project Architecture
 
-# OR using Yarn
-yarn start
+```plaintext
+MyApp/
+│── android/              # Native Android code
+│── ios/                  # Native iOS code
+│── src/
+│   ├── api/              # API services and endpoints
+│   ├── assets/           # Images, fonts, icons
+│   ├── components/       # Reusable UI components
+│   ├── hooks/            # Custom React hooks
+│   ├── navigation/       # React Navigation setup (stack/tab/drawer)
+│   ├── redux/            # Redux store, slices, sagas, persist config
+│   │   ├── store.js
+│   │   ├── slices/
+│   │   ├── sagas/
+│   ├── screens/          # Application screens
+│   ├── styles/           # Global styles (Tailwind config, themes)
+│   ├── utils/            # Utility/helper functions
+│   └── App.js            # Entry point
+│── tests/                # Detox and unit tests
+│── .detoxrc.json         # Detox configuration
+│── babel.config.js
+│── package.json
+│── README.md
 ```
 
-## Step 2: Build and run your app
+---
 
-With Metro running, open a new terminal window/pane from the root of your React Native project, and use one of the following commands to build and run your Android or iOS app:
+## 🛠️ Installation & Setup
 
-### Android
+```bash
+# Clone the repo
+git clone https://github.com/yourusername/MyApp.git
 
-```sh
-# Using npm
-npm run android
+# Navigate to project
+cd MyApp
 
-# OR using Yarn
-yarn android
+# Install dependencies
+yarn install
+# or
+npm install
+
+# iOS setup
+cd ios && pod install && cd ..
+
+# Run on Android
+npx react-native run-android
+
+# Run on iOS
+npx react-native run-ios
 ```
 
-### iOS
+---
 
-For iOS, remember to install CocoaPods dependencies (this only needs to be run on first clone or after updating native deps).
+## ✅ Testing with Detox
 
-The first time you create a new project, run the Ruby bundler to install CocoaPods itself:
+```bash
+# Build app for testing
+detox build --configuration ios.sim.debug
 
-```sh
-bundle install
+# Run tests
+detox test --configuration ios.sim.debug
 ```
 
-Then, and every time you update your native dependencies, run:
+---
 
-```sh
-bundle exec pod install
+## 📦 State Management
+
+- **Redux Toolkit** for slices and reducers.
+- **Redux Saga** for handling async side effects.
+- **Redux Persist** for offline data storage.
+
+Example store setup (`src/redux/store.js`):
+
+```javascript
+import {configureStore} from '@reduxjs/toolkit';
+import createSagaMiddleware from 'redux-saga';
+import {persistStore, persistReducer} from 'redux-persist';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import rootReducer from './slices';
+import rootSaga from './sagas';
+
+const sagaMiddleware = createSagaMiddleware();
+
+const persistConfig = {
+  key: 'root',
+  storage: AsyncStorage,
+  whitelist: ['auth'], // persist only auth state
+};
+
+const persistedReducer = persistReducer(persistConfig, rootReducer);
+
+export const store = configureStore({
+  reducer: persistedReducer,
+  middleware: getDefaultMiddleware =>
+    getDefaultMiddleware({thunk: false}).concat(sagaMiddleware),
+});
+
+sagaMiddleware.run(rootSaga);
+
+export const persistor = persistStore(store);
 ```
 
-For more information, please visit [CocoaPods Getting Started guide](https://guides.cocoapods.org/using/getting-started.html).
+---
 
-```sh
-# Using npm
-npm run ios
+## 🎨 Styling
 
-# OR using Yarn
-yarn ios
+- **TailwindCSS (NativeWind)** for utility-first styling.
+- **React Native Size Matters** for responsive sizing across devices.
+
+Example:
+
+```javascript
+import {Text, View} from 'react-native';
+import {scale} from 'react-native-size-matters';
+
+export default function HomeScreen() {
+  return (
+    <View className="flex-1 items-center justify-center bg-white">
+      <Text style={{fontSize: scale(18)}} className="text-blue-500 font-bold">
+        Welcome to MyApp 🚀
+      </Text>
+    </View>
+  );
+}
 ```
 
-If everything is set up correctly, you should see your new app running in the Android Emulator, iOS Simulator, or your connected device.
+---
 
-This is one way to run your app — you can also build it directly from Android Studio or Xcode.
+## 📄 License
 
-## Step 3: Modify your app
-
-Now that you have successfully run the app, let's make changes!
-
-Open `App.tsx` in your text editor of choice and make some changes. When you save, your app will automatically update and reflect these changes — this is powered by [Fast Refresh](https://reactnative.dev/docs/fast-refresh).
-
-When you want to forcefully reload, for example to reset the state of your app, you can perform a full reload:
-
-- **Android**: Press the <kbd>R</kbd> key twice or select **"Reload"** from the **Dev Menu**, accessed via <kbd>Ctrl</kbd> + <kbd>M</kbd> (Windows/Linux) or <kbd>Cmd ⌘</kbd> + <kbd>M</kbd> (macOS).
-- **iOS**: Press <kbd>R</kbd> in iOS Simulator.
-
-## Congratulations! :tada:
-
-You've successfully run and modified your React Native App. :partying_face:
-
-### Now what?
-
-- If you want to add this new React Native code to an existing application, check out the [Integration guide](https://reactnative.dev/docs/integration-with-existing-apps).
-- If you're curious to learn more about React Native, check out the [docs](https://reactnative.dev/docs/getting-started).
-
-# Troubleshooting
-
-If you're having issues getting the above steps to work, see the [Troubleshooting](https://reactnative.dev/docs/troubleshooting) page.
-
-# Learn More
-
-To learn more about React Native, take a look at the following resources:
-
-- [React Native Website](https://reactnative.dev) - learn more about React Native.
-- [Getting Started](https://reactnative.dev/docs/environment-setup) - an **overview** of React Native and how setup your environment.
-- [Learn the Basics](https://reactnative.dev/docs/getting-started) - a **guided tour** of the React Native **basics**.
-- [Blog](https://reactnative.dev/blog) - read the latest official React Native **Blog** posts.
-- [`@facebook/react-native`](https://github.com/facebook/react-native) - the Open Source; GitHub **repository** for React Native.
+This project is licensed under the MIT License.
