@@ -1,3 +1,35 @@
 {
-  "extends": "@react-native/typescript-config/tsconfig.json"
+  "extends": "@react-native/typescript-config/tsconfig.json",
+  "compilerOptions": {
+    "experimentalDecorators": true,
+    "module": "nodenext",           // ✅ match moduleResolution
+    "moduleResolution": "nodenext", // ✅ modern Node ESM resolution
+    "allowJs": true,
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "isolatedModules": true,
+    "jsx": "react",
+    "lib": [
+      "es5",
+      "es2015",
+      "es2016.array.include",
+      "es2017",
+      "esnext",
+      "dom"
+    ],
+    "strict": true,
+    "baseUrl": "./",
+    "paths": {
+      "@/*": ["src/*/index", "src/*"],
+      "@/components/*": ["src/components/*"],
+      "@/screens/*": ["src/screens/*"],
+      "@/store/*": ["src/store/*"],
+      "@/navigation/*": ["src/navigation/*"]
+    },
+    "noEmit": true,
+    "resolveJsonModule": true,
+    "target": "esnext",
+    "types": ["jest", "detox"]
+  },
+  "exclude": ["node_modules", "babel.config.js", "metro.config.js"]
 }
